@@ -103,14 +103,17 @@
       font-size: 13px;
       color: #8e8e93;
     }
+    .workout-section {
+      background: #1c1c1e;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
     .workout-row {
       display: flex;
       align-items: center;
       gap: 12px;
       padding: 14px 16px;
-      background: #1c1c1e;
-      border-radius: 12px;
-      margin-bottom: 8px;
     }
     .day-badge {
       background: #2c2c2e;
@@ -138,6 +141,27 @@
     .workout-row-detail {
       font-size: 13px;
       color: #8e8e93;
+    }
+    .nested-exercises {
+      padding: 0 16px 12px;
+    }
+    .nested-exercise {
+      padding: 8px 12px;
+      background: #2c2c2e;
+      border-radius: 8px;
+      margin-bottom: 6px;
+    }
+    .nested-exercise:last-child {
+      margin-bottom: 0;
+    }
+    .nested-exercise-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .nested-exercise-detail {
+      font-size: 12px;
+      color: #8e8e93;
+      margin-top: 2px;
     }
     .cta-area {
       text-align: center;
@@ -286,15 +310,36 @@
 
       workouts.forEach(function(pw) {
         var w = pw.workout || {};
-        var exCount = (w.exercises || []).length;
+        var exercises = w.exercises || [];
+        html += '<div class="workout-section">';
         html += '<div class="workout-row">';
         if (data.scheduleMode === 'dayBased') {
           html += '<div class="day-badge">' + esc(dayLabel(pw.dayOfWeek)) + '</div>';
         }
         html += '<div class="workout-row-text">';
         html += '<div class="workout-row-name">' + esc(w.name || 'Workout') + '</div>';
-        html += '<div class="workout-row-detail">' + esc(w.category || 'General') + ' &middot; ' + exCount + ' exercise' + (exCount !== 1 ? 's' : '') + '</div>';
+        html += '<div class="workout-row-detail">' + esc(w.category || 'General') + ' &middot; ' + exercises.length + ' exercise' + (exercises.length !== 1 ? 's' : '') + '</div>';
         html += '</div></div>';
+
+        if (exercises.length > 0) {
+          html += '<div class="nested-exercises">';
+          exercises.forEach(function(ex) {
+            html += '<div class="nested-exercise">';
+            html += '<div class="nested-exercise-name">' + esc(ex.name) + '</div>';
+            var details = [];
+            var setsStr = formatSets(ex.sets);
+            if (setsStr) details.push(setsStr);
+            var musclesStr = formatMuscles(ex.muscleGroups);
+            if (musclesStr) details.push(musclesStr);
+            if (details.length > 0) {
+              html += '<div class="nested-exercise-detail">' + esc(details.join(' — ')) + '</div>';
+            }
+            html += '</div>';
+          });
+          html += '</div>';
+        }
+
+        html += '</div>';
       });
 
       html += '</div>';
