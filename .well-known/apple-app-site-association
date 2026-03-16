@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["C3FW4SZ5N9.Broadbean.Fitness"],
+        "components": [
+          { "/": "/s/*" }
+        ]
+      }
+    ]
+  }
+}
